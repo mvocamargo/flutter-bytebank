@@ -19,7 +19,6 @@ class FormularioTransferencia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ;
     return Scaffold(
       appBar: AppBar(
         title: Text('New transfer'),
@@ -54,7 +53,8 @@ class FormularioTransferencia extends StatelessWidget {
     final double valor = double.tryParse(_controllerFieldValor.text);
     if (conta != null && valor != null) {
       final transferenciaCriada = Transferencia(valor, conta);
-      print('$transferenciaCriada');
+      print('Criando Transferencia');
+      debugPrint('$transferenciaCriada');
       Navigator.pop(context, transferenciaCriada);
     }
   }
@@ -87,18 +87,24 @@ class Editor extends StatelessWidget {
 }
 
 class ListaTransferencia extends StatelessWidget {
+  
+  final List<Transferencia> _transferencias = List();
+  
   @override
   Widget build(BuildContext context) {
+    _transferencias.add(Transferencia(100, '1000'));
+    _transferencias.add(Transferencia(100, '1000'));
+    _transferencias.add(Transferencia(100, '1000'));
     return Scaffold(
       appBar: AppBar(
         title: Text('Transferências'),
       ),
-      body: Column(
-        children: <Widget>[
-          ItemTransferencia(Transferencia(100, '2961')),
-          ItemTransferencia(Transferencia(1000, '2961')),
-          ItemTransferencia(Transferencia(600, '2961')),
-        ],
+      body: ListView.builder(
+        itemCount: _transferencias.length,
+        itemBuilder: (context, indice){
+
+          return ItemTransferencia(_transferencias[indice]);
+        }
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -106,18 +112,17 @@ class ListaTransferencia extends StatelessWidget {
           final Future<Transferencia> future = Navigator.push(context, MaterialPageRoute(builder: (context){
             return FormularioTransferencia();
           }));
-          future.then(transferenciaRecebida){
+          future.then((transferenciaRecebida){
             print('opa future');
             print('$transferenciaRecebida');
-          };
+            _transferencias.add(transferenciaRecebida);
+          });
         },
       ),
     );
   }
 }
 
-class ( {
-}
 
 class ItemTransferencia extends StatelessWidget {
   final Transferencia _transferencia;
