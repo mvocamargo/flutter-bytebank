@@ -13,48 +13,59 @@ class BytebankApp extends StatelessWidget {
   }
 }
 
-class FormularioTransferencia extends StatelessWidget {
+class FormularioTransferencia extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return FormularioTransferenciaState();
+  }
+}
+
+class FormularioTransferenciaState extends State<FormularioTransferencia> {
+  
   final TextEditingController _controllerFieldConta = TextEditingController();
   final TextEditingController _controllerFieldValor = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('New transfer'),
       ),
-      body: Column(
-        children: <Widget>[
-          Editor(
-            controller: _controllerFieldConta,
-            rotulo: 'Número da Conta',
-            dica: '0000',
-          ),
-          Editor(
-            controller: _controllerFieldValor,
-            rotulo: 'Valor',
-            dica: '0000',
-            icone: Icons.monetization_on,
-          ),
-          RaisedButton(
-            child: Text('Adicionar'),
-            onPressed: () {
-              _criaTransferencia(context);
-            },
-          ),
-        ],
-      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Editor(
+              controller: _controllerFieldConta,
+              rotulo: 'Número da Conta',
+              dica: '0000',
+            ),
+            Editor(
+              controller: _controllerFieldValor,
+              rotulo: 'Valor',
+              dica: '0000',
+              icone: Icons.monetization_on,
+            ),
+            RaisedButton(
+              child: Text('Adicionar'),
+              onPressed: () {
+                _criaTransferencia(context);
+              },
+            ),
+          ],
+        ),
+      )
     );
   }
 
   void _criaTransferencia(BuildContext context) {
-    debugPrint('Add clicked');
+    print('Add clicked');
     final String conta = _controllerFieldConta.text;
     final double valor = double.tryParse(_controllerFieldValor.text);
     if (conta != null && valor != null) {
       final transferenciaCriada = Transferencia(valor, conta);
       print('Criando Transferencia');
-      debugPrint('$transferenciaCriada');
+      print('$transferenciaCriada');
       Navigator.pop(context, transferenciaCriada);
     }
   }
@@ -86,24 +97,29 @@ class Editor extends StatelessWidget {
   }
 }
 
-class ListaTransferencia extends StatelessWidget {
+class ListaTransferencia extends StatefulWidget {
   
   final List<Transferencia> _transferencias = List();
   
+
+  @override
+  State<StatefulWidget> createState() {
+    return ListaTransferenciaState();
+  }
+}
+
+class ListaTransferenciaState extends State<ListaTransferencia> {
   @override
   Widget build(BuildContext context) {
-    _transferencias.add(Transferencia(100, '1000'));
-    _transferencias.add(Transferencia(100, '1000'));
-    _transferencias.add(Transferencia(100, '1000'));
     return Scaffold(
       appBar: AppBar(
         title: Text('Transferências'),
       ),
       body: ListView.builder(
-        itemCount: _transferencias.length,
+        itemCount: widget._transferencias.length,
         itemBuilder: (context, indice){
 
-          return ItemTransferencia(_transferencias[indice]);
+          return ItemTransferencia(widget._transferencias[indice]);
         }
       ),
       floatingActionButton: FloatingActionButton(
@@ -113,16 +129,22 @@ class ListaTransferencia extends StatelessWidget {
             return FormularioTransferencia();
           }));
           future.then((transferenciaRecebida){
-            print('opa future');
-            print('$transferenciaRecebida');
-            _transferencias.add(transferenciaRecebida);
+            Future.delayed(Duration(seconds: 2), (){
+              print('opa future');
+              print('$transferenciaRecebida');
+              if(transferenciaRecebida != null){
+                // Sempre utilizar para atualizar o estato da aplicação
+                setState(() {
+                  widget._transferencias.add(transferenciaRecebida);
+                });
+              }
+            });
           });
         },
       ),
     );
   }
 }
-
 
 class ItemTransferencia extends StatelessWidget {
   final Transferencia _transferencia;
