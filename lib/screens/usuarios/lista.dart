@@ -1,3 +1,4 @@
+import 'package:bytebank/screens/usuarios/form.dart';
 import 'package:flutter/material.dart';
 
 const _tituloAppBar = 'Contacts';
@@ -30,10 +31,17 @@ class Contatos extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add,),
-        onPressed: (){},
+        child: Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ContatoFormulario(),
+            ),
+          );
+        },
       ),
     );
   }
 }
-
