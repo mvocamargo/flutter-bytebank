@@ -8,4 +8,7 @@ class Usuario {
   );
 
 
+
+  @override
+  String toString() => 'Usuario nome: $nome, numeroConta: $numeroConta';
 }
