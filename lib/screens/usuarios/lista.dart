@@ -39,6 +39,9 @@ class Contatos extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ContatoFormulario(),
             ),
+          )
+          .then(
+            (novoContato) => debugPrint(novoContato.toString()),
           );
         },
       ),
