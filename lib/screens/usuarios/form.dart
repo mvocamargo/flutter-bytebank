@@ -52,7 +52,7 @@ class _ContatoFormularioState extends State<ContatoFormulario> {
                     final String nome = _controllerFieldNome.text;
                     final int numeroConta = int.tryParse(_controllerFieldConta.text);
 
-                    final Usuario novoContato = Usuario(nome, numeroConta);
+                    final Usuario novoContato = Usuario(0, nome, numeroConta);
 
                     Navigator.pop(context, novoContato);
                   },
