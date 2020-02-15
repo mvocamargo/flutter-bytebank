@@ -14,7 +14,7 @@ class ContatosLista extends StatelessWidget {
       ),
       body: FutureBuilder<List<Usuario>>(
         initialData: List(),
-        future:  findAll(),
+        future: findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -52,15 +52,11 @@ class ContatosLista extends StatelessWidget {
           Icons.add,
         ),
         onPressed: () {
-          Navigator.of(context)
-              .push(
-                MaterialPageRoute(
-                  builder: (context) => ContatoFormulario(),
-                ),
-              )
-              .then(
-                (novoContato) => debugPrint(novoContato.toString()),
-              );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ContatoFormulario(),
+            ),
+          );
         },
       ),
     );
