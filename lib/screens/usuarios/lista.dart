@@ -1,34 +1,26 @@
+import 'package:bytebank/models/usuario.dart';
 import 'package:bytebank/screens/usuarios/form.dart';
 import 'package:flutter/material.dart';
 
-const _tituloAppBar = 'Contacts';
+const _tituloAppBar = 'Usuarios';
 
-class Contatos extends StatelessWidget {
+class ContatosLista extends StatelessWidget {
+
+  final List<Usuario> usuarios = List();
+
   @override
   Widget build(BuildContext context) {
+    usuarios.add(Usuario(1, 'marcus camargo', 2000));
     return Scaffold(
       appBar: AppBar(
         title: Text(_tituloAppBar),
       ),
-      body: ListView(
-        children: <Widget>[
-          Card(
-            child: ListTile(
-              title: Text(
-                'Gabbs',
-                style: TextStyle(
-                  fontSize: 24,
-                ),
-              ),
-              subtitle: Text(
-                '1000',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          )
-        ],
+      body: ListView.builder(
+        itemBuilder: (context, index){
+          final Usuario usuario = usuarios[index];
+          return _UsuarioItem(usuario);
+        },
+        itemCount: usuarios.length,
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -46,5 +38,32 @@ class Contatos extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class _UsuarioItem extends StatelessWidget {
+
+  final Usuario usuario;
+
+  _UsuarioItem(this.usuario);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+            child: ListTile(
+              title: Text(
+                usuario.nome,
+                style: TextStyle(
+                  fontSize: 24,
+                ),
+              ),
+              subtitle: Text(
+                usuario.numeroConta.toString(),
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          );
   }
 }
