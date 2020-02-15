@@ -1,4 +1,5 @@
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:flutter/material.dart';
 
@@ -52,9 +53,8 @@ class _ContatoFormularioState extends State<ContatoFormulario> {
                     final String nome = _controllerFieldNome.text;
                     final int numeroConta = int.tryParse(_controllerFieldConta.text);
 
-                    final Usuario novoContato = Usuario(0, nome, numeroConta);
-
-                    Navigator.pop(context, novoContato);
+                    final Usuario novoContato = Usuario(20, nome, numeroConta);
+                    save(novoContato).then((id) => Navigator.pop(context));
                   },
                 ),
               ),
