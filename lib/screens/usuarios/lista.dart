@@ -6,28 +6,45 @@ import 'package:flutter/material.dart';
 const _tituloAppBar = 'Usuarios';
 
 class ContatosLista extends StatelessWidget {
-  
-  
-
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         title: Text(_tituloAppBar),
       ),
       body: FutureBuilder<List<Usuario>>(
         initialData: List(),
-        future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
+        future:  findAll(),
         builder: (context, snapshot) {
-          final List<Usuario> usuarios = snapshot.data;
-          return ListView.builder(
-            itemBuilder: (context, index){
-              final Usuario usuario = usuarios[index];
-              return _UsuarioItem(usuario);
-            },
-            itemCount: usuarios.length,
-          );
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Carregando'),
+                  ],
+                ),
+              );
+              break;
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<Usuario> usuarios = snapshot.data;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  final Usuario usuario = usuarios[index];
+                  return _UsuarioItem(usuario);
+                },
+                itemCount: usuarios.length,
+              );
+              break;
+          }
+          return Text('Erro desconhecido');
         },
       ),
       floatingActionButton: FloatingActionButton(
