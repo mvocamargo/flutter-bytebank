@@ -20,7 +20,7 @@ class UsuarioDao {
   Future<int> save(Usuario usuario) async{
 
     final Database db = await getDatabase();
-    Map<String, dynamic> usuarioMap = toMap(usuario);
+    Map<String, dynamic> usuarioMap = _toMap(usuario);
     return db.insert(_tableName, usuarioMap);
 
     // return getDatabase().then((db) {
@@ -31,19 +31,12 @@ class UsuarioDao {
     // });
   }
 
-  Map<String, dynamic> toMap(Usuario usuario) {
-    final Map<String, dynamic> usuarioMap = Map();
-    usuarioMap[_nome] = usuario.nome;
-    usuarioMap[_numeroConta] = usuario.numeroConta;
-    return usuarioMap;
-  }
-
   // pegar todos os usuarios
   Future<List<Usuario>> findAll() async {
 
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query(_tableName);
-    List<Usuario> usuarios = toList(result);
+    List<Usuario> usuarios = _toList(result);
     return usuarios;
 
     // return getDatabase().then((db) {
@@ -62,7 +55,34 @@ class UsuarioDao {
     // });
   }
 
-  List<Usuario> toList(List<Map<String, dynamic>> result) {
+  Future<int> update(Usuario usuario) async {
+    final Database db = await getDatabase();
+    final Map<String, dynamic> usuarioMap = _toMap(usuario);
+    return db.update(
+      _tableName,
+      usuarioMap,
+      where: 'id = ?',
+      whereArgs: [usuario.id],
+    );
+  }
+
+  Future<int> delete(int id) async {
+    final Database db = await getDatabase();
+    return db.delete(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+    Map<String, dynamic> _toMap(Usuario usuario) {
+    final Map<String, dynamic> usuarioMap = Map();
+    usuarioMap[_nome] = usuario.nome;
+    usuarioMap[_numeroConta] = usuario.numeroConta;
+    return usuarioMap;
+  }
+
+  List<Usuario> _toList(List<Map<String, dynamic>> result) {
     final List<Usuario> usuarios = List();  
     for (Map<String, dynamic> item in result) {
       final Usuario usuario = Usuario(
