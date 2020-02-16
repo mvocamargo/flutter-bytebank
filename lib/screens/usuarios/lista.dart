@@ -1,11 +1,19 @@
-import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/database/dao/usuario_dao.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:bytebank/screens/usuarios/form.dart';
 import 'package:flutter/material.dart';
 
 const _tituloAppBar = 'Usuarios';
 
-class ContatosLista extends StatelessWidget {
+class ContatosLista extends StatefulWidget {
+
+  @override
+  _ContatosListaState createState() => _ContatosListaState();
+}
+
+class _ContatosListaState extends State<ContatosLista> {
+  final UsuarioDao _dao = UsuarioDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +22,7 @@ class ContatosLista extends StatelessWidget {
       ),
       body: FutureBuilder<List<Usuario>>(
         initialData: List(),
-        future: findAll(),
+        future: _dao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
