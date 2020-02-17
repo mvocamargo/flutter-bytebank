@@ -18,43 +18,79 @@ class Dashboard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Image.asset('images/bytebank_logo.png'),
           ),
-          Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                color: Theme.of(context).primaryColor,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ContatosLista(),
-                    ));
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: <Widget>[
+                _FeatureItem(
+                  'Transferência',
+                  Icons.monetization_on,
+                  onClick: () {
+                    _exibeListaUsuarios(context);
                   },
-                  child: Container(
-                    height: 100,
-                    width: 150,
-                    padding: EdgeInsets.all(8.0),
-                    // color: Theme.of(context).primaryColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(
-                          Icons.people,
-                          color: Colors.white,
-                          size: 30.0,
-                        ),
-                        Text(
-                          'Contacts',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ],
-                    ),
+                ),
+                _FeatureItem(
+                  'Feed Transações',
+                  Icons.description,
+                  onClick: () => print('Feed'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _exibeListaUsuarios(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ContatosLista(),
+    ));
+  }
+}
+
+class _FeatureItem extends StatelessWidget {
+  final String nome;
+  final IconData icone;
+  final Function onClick;
+
+  _FeatureItem(this.nome, this.icone, {@required this.onClick});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Material(
+        color: Theme.of(context).primaryColor,
+        child: InkWell(
+          onTap: () {
+            onClick();
+          },
+          child: Container(
+            height: 100,
+            width: 150,
+            padding: EdgeInsets.all(8.0),
+            // color: Theme.of(context).primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Icon(
+                  icone,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                Text(
+                  nome,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
                   ),
                 ),
-              )),
-        ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
