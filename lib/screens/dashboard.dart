@@ -1,3 +1,4 @@
+import 'package:bytebank/screens/transferencia/lista.dart';
 import 'package:bytebank/screens/usuarios/lista.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class Dashboard extends StatelessWidget {
                 _FeatureItem(
                   'Feed Transações',
                   Icons.description,
-                  onClick: () => print('Feed'),
+                  onClick: () => _exibeFeedTransferencia(context),
                 ),
               ],
             ),
@@ -45,6 +46,11 @@ class Dashboard extends StatelessWidget {
   void _exibeListaUsuarios(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ContatosLista(),
+    ));
+  }
+  void _exibeFeedTransferencia(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ListaTransferencia(),
     ));
   }
 }
