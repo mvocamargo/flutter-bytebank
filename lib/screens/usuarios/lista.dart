@@ -3,7 +3,7 @@ import 'package:bytebank/models/usuario.dart';
 import 'package:bytebank/screens/usuarios/form.dart';
 import 'package:flutter/material.dart';
 
-const _tituloAppBar = 'Usuarios';
+const _tituloAppBar = 'Transferência';
 
 class ContatosLista extends StatefulWidget {
 
