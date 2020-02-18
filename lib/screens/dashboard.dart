@@ -26,9 +26,7 @@ class Dashboard extends StatelessWidget {
                 _FeatureItem(
                   'Transferência',
                   Icons.monetization_on,
-                  onClick: () {
-                    _exibeListaUsuarios(context);
-                  },
+                  onClick: () => _exibeListaUsuarios(context),
                 ),
                 _FeatureItem(
                   'Feed Transações',
@@ -48,6 +46,7 @@ class Dashboard extends StatelessWidget {
       builder: (context) => ContatosLista(),
     ));
   }
+
   void _exibeFeedTransferencia(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ListaTransferencia(),
@@ -60,7 +59,9 @@ class _FeatureItem extends StatelessWidget {
   final IconData icone;
   final Function onClick;
 
-  _FeatureItem(this.nome, this.icone, {@required this.onClick});
+  _FeatureItem(this.nome, this.icone, {@required this.onClick})
+      : assert(icone != null),
+        assert(onClick != null);
 
   @override
   Widget build(BuildContext context) {
