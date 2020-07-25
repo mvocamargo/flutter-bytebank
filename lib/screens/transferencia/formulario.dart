@@ -1,5 +1,6 @@
 import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/models/transferencia.dart';
+import 'package:bytebank/models/usuario.dart';
 import 'package:flutter/material.dart';
 
 const _tituloAppBar = 'New transfer';
@@ -57,11 +58,11 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   }
 
   void _criaTransferencia(BuildContext context) {
-    final String conta = _controllerFieldConta.text;
-    final double valor = double.tryParse(_controllerFieldValor.text);
-    if (conta != null && valor != null) {
-      final transferenciaCriada = Transferencia(valor, conta);
-      Navigator.pop(context, transferenciaCriada);
-    }
+    // final String<Usuario> conta = _controllerFieldConta.text;
+    // final double valor = double.tryParse(_controllerFieldValor.text);
+    // if (conta != null && valor != null) {
+    //   final transferenciaCriada = Transferencia(valor, conta);
+    //   Navigator.pop(context, transferenciaCriada);
+    // }
   }
 }
