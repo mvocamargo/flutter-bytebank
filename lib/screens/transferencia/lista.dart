@@ -1,59 +1,61 @@
-import 'package:bytebank/models/transferencia.dart';
+import 'package:bytebank/components/progress.dart';
+import 'package:bytebank/http/webclient.dart';
 import 'package:flutter/material.dart';
+import 'package:bytebank/models/transferencia.dart';
 
-import 'formulario.dart';
-
-class ListaTransferencia extends StatefulWidget {
-  final List<Transferencia> _transferencias = List();
-
-  @override
-  State<StatefulWidget> createState() {
-    return ListaTransferenciaState();
-  }
-}
-
-class ListaTransferenciaState extends State<ListaTransferencia> {
+class ListaTransferencias extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transferências'),
+        title: Text('Transferência'),
       ),
-      body: ListView.builder(
-          itemCount: widget._transferencias.length,
-          itemBuilder: (context, indice) {
-            return ItemTransferencia(widget._transferencias[indice]);
-          }),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return FormularioTransferencia();
-          })).then((transferenciaRecebida) {
-            if (transferenciaRecebida != null) {
-              setState(() {
-                widget._transferencias.add(transferenciaRecebida);
-              });
-            }
-          });
+      body: FutureBuilder<List<Transferencia>>(
+        // Usando delay para testar o funcionamento do loading
+        future: Future.delayed(Duration(seconds: 2)).then((value) => findAll()),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Progress(
+                message: 'Carregando transferências',
+              );
+              break;
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<Transferencia> transferencias = snapshot.data;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  final Transferencia transferencia = transferencias[index];
+                  return Card(
+                    child: ListTile(
+                      leading: Icon(Icons.monetization_on),
+                      title: Text(
+                        transferencia.valor.toString(),
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        transferencia.conta.numeroConta.toString(),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                itemCount: transferencias.length,
+              );
+              break;
+          }
+
+          return Text('Unknown error');
         },
       ),
     );
-  }
-}
-
-class ItemTransferencia extends StatelessWidget {
-  final Transferencia _transferencia;
-
-  ItemTransferencia(this._transferencia);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-        child: ListTile(
-      leading: Icon(Icons.monetization_on),
-      title: Text(_transferencia.valor.toString()),
-      subtitle: Text(_transferencia.conta.toString()),
-    ));
   }
 }
