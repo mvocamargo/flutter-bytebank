@@ -1,6 +1,8 @@
 import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/database/dao/usuario_dao.dart';
 import 'package:bytebank/models/usuario.dart';
+import 'package:bytebank/screens/transferencia/formulario-2.dart';
+import 'package:bytebank/screens/transferencia/formulario.dart';
 import 'package:bytebank/screens/usuarios/form.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +41,16 @@ class _ContatosListaState extends State<ContatosLista> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Usuario usuario = usuarios[index];
-                  return _UsuarioItem(usuario);
+                  return _UsuarioItem(
+                    usuario,
+                    onClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TransferenciaFormulario(usuario),
+                        ),
+                      );
+                    },
+                  );
                 },
                 itemCount: usuarios.length,
               );
@@ -48,31 +59,36 @@ class _ContatosListaState extends State<ContatosLista> {
           return Text('Erro desconhecido');
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ContatoFormulario(),
-            ),
-          );
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(
+      //     Icons.add,
+      //   ),
+      //   onPressed: () {
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(
+      //         builder: (context) => ContatoFormulario(),
+      //       ),
+      //     );
+      //   },
+      // ),
     );
   }
 }
 
 class _UsuarioItem extends StatelessWidget {
   final Usuario usuario;
+  final Function onClick;
 
-  _UsuarioItem(this.usuario);
+  _UsuarioItem(
+    this.usuario, {
+    @required this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(
           usuario.nome,
           style: TextStyle(
