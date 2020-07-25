@@ -1,4 +1,4 @@
-import 'package:bytebank/http/webclient.dart';
+import 'package:bytebank/http/webclients/transferencias_webclient.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class TransferenciaFormulario extends StatefulWidget {
 
 class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
   final TextEditingController _valueController = TextEditingController();
+  final TransferenciaWebClient _webClient = TransferenciaWebClient();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
                     child: Text('Transferência'), onPressed: () {
                       final double value = double.tryParse(_valueController.text);
                       final transferenciaCriada = Transferencia(value, widget.usuario);
-                      save(transferenciaCriada).then((transferenciaRecebida) {
+                      _webClient.save(transferenciaCriada).then((transferenciaRecebida) {
                         if(transferenciaRecebida != null) {
                           Navigator.pop(context);
                         }

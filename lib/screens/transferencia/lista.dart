@@ -1,10 +1,12 @@
 import 'package:bytebank/components/centered_message.dart';
 import 'package:bytebank/components/progress.dart';
-import 'package:bytebank/http/webclient.dart';
+import 'package:bytebank/http/webclients/transferencias_webclient.dart';
 import 'package:flutter/material.dart';
 import 'package:bytebank/models/transferencia.dart';
 
 class ListaTransferencias extends StatelessWidget {
+  final TransferenciaWebClient _webClient = TransferenciaWebClient();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +15,7 @@ class ListaTransferencias extends StatelessWidget {
       ),
       body: FutureBuilder<List<Transferencia>>(
         // Usando delay para testar o funcionamento do loading
-        future: Future.delayed(Duration(seconds: 2)).then((value) => findAll()),
+        future: Future.delayed(Duration(seconds: 2)).then((value) => _webClient.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
