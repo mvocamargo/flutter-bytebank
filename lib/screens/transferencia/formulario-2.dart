@@ -1,3 +1,4 @@
+import 'package:bytebank/http/webclient.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +57,14 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
                 child: SizedBox(
                   width: double.maxFinite,
                   child: RaisedButton(
-                    child: Text('Transfer'), onPressed: () {
+                    child: Text('Transferência'), onPressed: () {
                       final double value = double.tryParse(_valueController.text);
-                      final transactionCreated = Transferencia(value, widget.usuario);
+                      final transferenciaCriada = Transferencia(value, widget.usuario);
+                      save(transferenciaCriada).then((transferenciaRecebida) {
+                        if(transferenciaRecebida != null) {
+                          Navigator.pop(context);
+                        }
+                      });
                   },
                   ),
                 ),
