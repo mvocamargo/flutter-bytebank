@@ -2,8 +2,6 @@ import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/database/dao/usuario_dao.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:bytebank/screens/transferencia/formulario-2.dart';
-import 'package:bytebank/screens/transferencia/formulario.dart';
-import 'package:bytebank/screens/usuarios/form.dart';
 import 'package:flutter/material.dart';
 
 const _tituloAppBar = 'Transferência';

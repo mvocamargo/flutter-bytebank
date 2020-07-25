@@ -1,6 +1,4 @@
 import 'package:bytebank/components/editor.dart';
-import 'package:bytebank/models/transferencia.dart';
-import 'package:bytebank/models/usuario.dart';
 import 'package:flutter/material.dart';
 
 const _tituloAppBar = 'New transfer';
