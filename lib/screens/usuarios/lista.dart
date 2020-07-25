@@ -1,3 +1,4 @@
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/database/dao/usuario_dao.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:bytebank/screens/usuarios/form.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 const _tituloAppBar = 'Transferência';
 
 class ContatosLista extends StatefulWidget {
-
   @override
   _ContatosListaState createState() => _ContatosListaState();
 }
@@ -28,15 +28,8 @@ class _ContatosListaState extends State<ContatosLista> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Carregando'),
-                  ],
-                ),
+              return Progress(
+                message: 'Carregando usuários',
               );
               break;
             case ConnectionState.active:
