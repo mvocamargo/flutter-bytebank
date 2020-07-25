@@ -13,6 +13,12 @@ class TransferenciaWebClient {
     final Response response =
         await client.get(baseUrl).timeout(Duration(seconds: 5));
     final List<dynamic> decodeJson = jsonDecode(response.body);
+    List<Transferencia> transferencias = _toTransferencias(decodeJson);
+
+    return transferencias;
+  }
+
+  List<Transferencia> _toTransferencias(List decodeJson) {
     final List<Transferencia> transferencias = List();
     for (Map<String, dynamic> transferenciaJson in decodeJson) {
       final Map<String, dynamic> contactJson = transferenciaJson['contact'];
@@ -26,18 +32,11 @@ class TransferenciaWebClient {
       );
       transferencias.add(transferencia);
     }
-
     return transferencias;
   }
 
   Future<Transferencia> save(Transferencia transferencia) async {
-    final Map<String, dynamic> transferenciaMap = {
-      'value': transferencia.valor,
-      'contact': {
-        'name': transferencia.conta.nome,
-        'accountNumber': transferencia.conta.numeroConta,
-      }
-    };
+    Map<String, dynamic> transferenciaMap = _toMap(transferencia);
     final String transferenciaJson = jsonEncode(transferenciaMap);
 
     final Response response = await client.post(
@@ -49,6 +48,10 @@ class TransferenciaWebClient {
       body: transferenciaJson,
     );
 
+    return _toTransferencia(response);
+  }
+
+  Transferencia _toTransferencia(Response response) {
     Map<String, dynamic> json = jsonDecode(response.body);
     final Map<String, dynamic> contactJson = json['contact'];
     return Transferencia(
@@ -59,5 +62,16 @@ class TransferenciaWebClient {
         contactJson['accountNumber'],
       ),
     );
+  }
+
+  Map<String, dynamic> _toMap(Transferencia transferencia) {
+    final Map<String, dynamic> transferenciaMap = {
+      'value': transferencia.valor,
+      'contact': {
+        'name': transferencia.conta.nome,
+        'accountNumber': transferencia.conta.numeroConta,
+      }
+    };
+    return transferenciaMap;
   }
 }
