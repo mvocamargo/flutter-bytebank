@@ -36,7 +36,7 @@ Future<List<Transferencia>> findAll() async {
   for (Map<String, dynamic> transferenciaJson in decodeJson) {
     final Map<String, dynamic> contactJson = transferenciaJson['contact'];
     final Transferencia transferencia =  Transferencia(
-      transferenciaJson['valor'],
+      transferenciaJson['value'],
       Usuario(
         0,
         contactJson['name'],
