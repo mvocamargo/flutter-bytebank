@@ -1,4 +1,5 @@
 import 'package:bytebank/models/transferencia.dart';
+import 'package:bytebank/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
 import 'formulario.dart';
@@ -28,7 +29,8 @@ class ListaTransferenciaState extends State<ListaTransferencia> {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return FormularioTransferencia();
+            // return FormularioTransferencia();
+            return Dashboard();
           })).then((transferenciaRecebida) {
             if (transferenciaRecebida != null) {
               setState(() {
