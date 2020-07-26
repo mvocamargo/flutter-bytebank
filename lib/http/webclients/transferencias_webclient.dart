@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:bytebank/http/webclient.dart';
 import 'package:bytebank/models/transferencia.dart';
-import 'package:bytebank/models/usuario.dart';
 import 'package:http/http.dart';
 
 const String baseUrl = 'http://192.168.0.15:8080/transactions';
 
 class TransferenciaWebClient {
   Future<List<Transferencia>> findAll() async {
-    // Improtante setar um timeout para não consumir recursos do dispositivo do usuário "eternamente"
+    // Importante setar um timeout para não consumir recursos do dispositivo do usuário "eternamente"
     final Response response =
         await client.get(baseUrl).timeout(Duration(seconds: 5));
     final List<dynamic> decodeJson = jsonDecode(response.body);
@@ -21,23 +20,13 @@ class TransferenciaWebClient {
   List<Transferencia> _toTransferencias(List decodeJson) {
     final List<Transferencia> transferencias = List();
     for (Map<String, dynamic> transferenciaJson in decodeJson) {
-      final Map<String, dynamic> contactJson = transferenciaJson['contact'];
-      final Transferencia transferencia = Transferencia(
-        transferenciaJson['value'],
-        Usuario(
-          0,
-          contactJson['name'],
-          contactJson['accountNumber'],
-        ),
-      );
-      transferencias.add(transferencia);
+      transferencias.add(Transferencia.fromJson(transferenciaJson));
     }
     return transferencias;
   }
 
   Future<Transferencia> save(Transferencia transferencia) async {
-    Map<String, dynamic> transferenciaMap = _toMap(transferencia);
-    final String transferenciaJson = jsonEncode(transferenciaMap);
+    final String transferenciaJson = jsonEncode(transferencia.toJson());
 
     final Response response = await client.post(
       baseUrl,
@@ -53,25 +42,6 @@ class TransferenciaWebClient {
 
   Transferencia _toTransferencia(Response response) {
     Map<String, dynamic> json = jsonDecode(response.body);
-    final Map<String, dynamic> contactJson = json['contact'];
-    return Transferencia(
-      json['value'],
-      Usuario(
-        0,
-        contactJson['name'],
-        contactJson['accountNumber'],
-      ),
-    );
-  }
-
-  Map<String, dynamic> _toMap(Transferencia transferencia) {
-    final Map<String, dynamic> transferenciaMap = {
-      'value': transferencia.valor,
-      'contact': {
-        'name': transferencia.conta.nome,
-        'accountNumber': transferencia.conta.numeroConta,
-      }
-    };
-    return transferenciaMap;
+    return Transferencia.fromJson(json);
   }
 }
