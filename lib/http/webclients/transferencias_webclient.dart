@@ -12,17 +12,9 @@ class TransferenciaWebClient {
     final Response response =
         await client.get(baseUrl).timeout(Duration(seconds: 5));
     final List<dynamic> decodeJson = jsonDecode(response.body);
-    List<Transferencia> transferencias = _toTransferencias(decodeJson);
-
-    return transferencias;
-  }
-
-  List<Transferencia> _toTransferencias(List decodeJson) {
-    final List<Transferencia> transferencias = List();
-    for (Map<String, dynamic> transferenciaJson in decodeJson) {
-      transferencias.add(Transferencia.fromJson(transferenciaJson));
-    }
-    return transferencias;
+    return decodeJson
+        .map((dynamic json) => Transferencia.fromJson(json))
+        .toList();
   }
 
   Future<Transferencia> save(Transferencia transferencia) async {
@@ -37,11 +29,6 @@ class TransferenciaWebClient {
       body: transferenciaJson,
     );
 
-    return _toTransferencia(response);
-  }
-
-  Transferencia _toTransferencia(Response response) {
-    Map<String, dynamic> json = jsonDecode(response.body);
-    return Transferencia.fromJson(json);
+    return Transferencia.fromJson(jsonDecode(response.body));
   }
 }
