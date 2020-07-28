@@ -1,3 +1,4 @@
+import 'package:bytebank/components/transferencia_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencias_webclient.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/models/usuario.dart';
@@ -9,7 +10,8 @@ class TransferenciaFormulario extends StatefulWidget {
   TransferenciaFormulario(this.usuario);
 
   @override
-  _TransferenciaFormularioState createState() => _TransferenciaFormularioState();
+  _TransferenciaFormularioState createState() =>
+      _TransferenciaFormularioState();
 }
 
 class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
@@ -49,7 +51,7 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
                 child: TextField(
                   controller: _valueController,
                   style: TextStyle(fontSize: 24.0),
-                  decoration: InputDecoration(labelText: 'Value'),
+                  decoration: InputDecoration(labelText: 'Valor'),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
               ),
@@ -58,15 +60,23 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
                 child: SizedBox(
                   width: double.maxFinite,
                   child: RaisedButton(
-                    child: Text('Transferência'), onPressed: () {
-                      final double value = double.tryParse(_valueController.text);
-                      final transferenciaCriada = Transferencia(value, widget.usuario);
-                      _webClient.save(transferenciaCriada).then((transferenciaRecebida) {
-                        if(transferenciaRecebida != null) {
-                          Navigator.pop(context);
-                        }
-                      });
-                  },
+                    child: Text('Transferência'),
+                    onPressed: () {
+                      final double value =
+                          double.tryParse(_valueController.text);
+                      final transferenciaCriada =
+                          Transferencia(value, widget.usuario);
+                      showDialog(
+                          context: context,
+                          builder: (contextDialog) {
+                            return TransferenciaAuthDialog(
+                              onConfirm: (String password) {
+                                // debugPrint(context);
+                                _save(transferenciaCriada, password, context);
+                              },
+                            );
+                          });
+                    },
                   ),
                 ),
               )
@@ -75,5 +85,16 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
         ),
       ),
     );
+  }
+
+  void _save(Transferencia transferenciaCriada, String password, BuildContext contextDialog,) async{
+    await Future.delayed(Duration(seconds: 1));
+    _webClient
+        .save(transferenciaCriada, password)
+        .then((transferenciaRecebida) {
+      if (transferenciaRecebida != null) {
+        Navigator.pop(contextDialog);
+      }
+    });
   }
 }

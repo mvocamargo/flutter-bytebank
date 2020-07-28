@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 
-class TransferenciaAuthDialog extends StatelessWidget {
+class TransferenciaAuthDialog extends StatefulWidget {
+  final Function(String password) onConfirm;
+
+  TransferenciaAuthDialog({
+    @required this.onConfirm,
+  });
+
+  @override
+  _TransferenciaAuthDialogState createState() => _TransferenciaAuthDialogState();
+}
+
+class _TransferenciaAuthDialogState extends State<TransferenciaAuthDialog> {
+
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Autenticação'),
       content: TextField(
+        controller: _passwordController,
         obscureText: true,
         maxLength: 4,
         textAlign: TextAlign.center,
@@ -17,13 +32,12 @@ class TransferenciaAuthDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-            onPressed: () {
-              print('opa');
-            },
+            onPressed: () => Navigator.pop(context),
             child: Text('Cancelar')),
         FlatButton(
             onPressed: () {
-              print('opa');
+              widget.onConfirm(_passwordController.text);
+              Navigator.pop(context);
             },
             child: Text('Confirmar')),
       ],

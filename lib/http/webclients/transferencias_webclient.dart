@@ -17,14 +17,14 @@ class TransferenciaWebClient {
         .toList();
   }
 
-  Future<Transferencia> save(Transferencia transferencia) async {
+  Future<Transferencia> save(Transferencia transferencia, String password) async {
     final String transferenciaJson = jsonEncode(transferencia.toJson());
 
     final Response response = await client.post(
       baseUrl,
       headers: {
         'Content-type': 'application/json',
-        'password': '1000',
+        'password': password,
       },
       body: transferenciaJson,
     );
