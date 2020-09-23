@@ -1,3 +1,4 @@
+import 'package:bytebank/components/response_dialog.dart';
 import 'package:bytebank/components/transferencia_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencias_webclient.dart';
 import 'package:bytebank/models/transferencia.dart';
@@ -87,14 +88,28 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
     );
   }
 
-  void _save(Transferencia transferenciaCriada, String password, BuildContext contextDialog,) async{
-    await Future.delayed(Duration(seconds: 1));
-    _webClient
-        .save(transferenciaCriada, password)
-        .then((transferenciaRecebida) {
-      if (transferenciaRecebida != null) {
-        Navigator.pop(contextDialog);
-      }
+  void _save(
+    Transferencia transferenciaCriada,
+    String password,
+    BuildContext contextDialog,
+  ) async {
+    final Transferencia transferencia =
+        await _webClient.save(transferenciaCriada, password).catchError((e) {
+      showDialog(
+        context: context,
+        builder: (contextDialog) {
+          return FailureDialog(e.message);
+        },
+      );
     });
+    if (transferencia != null) {
+      await showDialog(
+        context: context,
+        builder: (contextDialog) {
+          return SuccessDialog('Deu certo!!!');
+        },
+      );
+      Navigator.pop(contextDialog);
+    }
   }
 }
