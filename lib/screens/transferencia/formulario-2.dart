@@ -101,7 +101,7 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
           return FailureDialog(e.message);
         },
       );
-    });
+    }, test: (e) => e is Exception);
     if (transferencia != null) {
       await showDialog(
         context: context,
