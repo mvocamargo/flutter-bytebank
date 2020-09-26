@@ -20,6 +20,7 @@ class TransferenciaWebClient {
       Transferencia transferencia, String password) async {
     final String transferenciaJson = jsonEncode(transferencia.toJson());
 
+    // Delay para simular demora na resposta
     await Future.delayed(Duration(seconds: 10));
 
     final Response response = await client.post(
