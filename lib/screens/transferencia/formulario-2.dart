@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:bytebank/components/response_dialog.dart';
 import 'package:bytebank/components/transferencia_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencias_webclient.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/models/usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TransferenciaFormulario extends StatefulWidget {
   final Usuario usuario;
@@ -18,9 +21,11 @@ class TransferenciaFormulario extends StatefulWidget {
 class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
   final TextEditingController _valueController = TextEditingController();
   final TransferenciaWebClient _webClient = TransferenciaWebClient();
+  final String transactionId = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
+    print('ID da transferencia $transactionId');
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -66,7 +71,7 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
                       final double value =
                           double.tryParse(_valueController.text);
                       final transferenciaCriada =
-                          Transferencia(value, widget.usuario);
+                          Transferencia(value, widget.usuario, transactionId);
                       showDialog(
                           context: context,
                           builder: (contextDialog) {
@@ -98,10 +103,25 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
       showDialog(
         context: context,
         builder: (contextDialog) {
+          return FailureDialog('Tempo de resposta excedido');
+        },
+      );
+    }, test: (e) => e is TimeoutException).catchError((e) {
+      showDialog(
+        context: context,
+        builder: (contextDialog) {
           return FailureDialog(e.message);
         },
       );
-    }, test: (e) => e is Exception);
+    }, test: (e) => e is HttpException).catchError((e) {
+      showDialog(
+        context: context,
+        builder: (contextDialog) {
+          return FailureDialog('Erro desconhecido');
+        },
+      );
+    });
+
     if (transferencia != null) {
       await showDialog(
         context: context,
