@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/components/response_dialog.dart';
 import 'package:bytebank/components/transferencia_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencias_webclient.dart';
@@ -23,6 +24,8 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
   final TransferenciaWebClient _webClient = TransferenciaWebClient();
   final String transactionId = Uuid().v4();
 
+  bool _sending = false;
+
   @override
   Widget build(BuildContext context) {
     print('ID da transferencia $transactionId');
@@ -36,6 +39,15 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Visibility(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Progress(
+                    message: 'Enviando...',
+                  ),
+                ),
+                visible: _sending,
+              ),
               Text(
                 widget.usuario.nome,
                 style: TextStyle(
@@ -98,6 +110,9 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
     String password,
     BuildContext contextDialog,
   ) async {
+    setState(() {
+      _sending = true;
+    });
     final Transferencia transferencia =
         await _webClient.save(transferenciaCriada, password).catchError((e) {
       showDialog(
@@ -120,6 +135,10 @@ class _TransferenciaFormularioState extends State<TransferenciaFormulario> {
           return FailureDialog('Erro desconhecido');
         },
       );
+    }).whenComplete(() {
+      setState(() {
+        _sending = false;
+      });
     });
 
     if (transferencia != null) {
